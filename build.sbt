@@ -1,7 +1,7 @@
 import BuildSettings._
 import sbt._
 
-ThisBuild / version := "0.0.1-SNAPSHOT"
+ThisBuild / version := "0.0.1"
 ThisBuild / description := "Beangle Style Checker."
 ThisBuild / organization := "org.beangle.style"
 ThisBuild / homepage := Some(url("https://github.com/beangle/style"))
@@ -19,6 +19,8 @@ ThisBuild / developers := List(
     url   = url("https://github.com/duantihua")
   )
 )
+
+ThisBuild / credentials += Credentials(Path.userHome / ".sbt" / "sonatype_credentials")
 ThisBuild / pomIncludeRepository := { _ => false }
 ThisBuild / publishTo := {
   val nexus = "https://oss.sonatype.org/"
