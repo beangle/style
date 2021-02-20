@@ -54,5 +54,5 @@ object StylePlugin extends sbt.AutoPlugin {
           log.warn(f)
         }
       }
-    }
+    }.triggeredBy(compile in Compile)
 }

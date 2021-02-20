@@ -16,54 +16,33 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package org.beangle.style.maven
+package org.beangle.style.core
 
-import java.io.{BufferedReader, File, Reader, InputStreamReader, FileInputStream}
-import org.apache.maven.plugin.AbstractMojo
-import org.apache.maven.project.MavenProject
-import org.apache.maven.plugins.annotations.{Mojo, Parameter, LifecyclePhase, ResolutionScope}
-import org.beangle.style.util.{Files, Strings}
-import org.beangle.style.util.MediaTypes
 import org.beangle.style.util.Files./
+import org.beangle.style.util.{Files, MediaTypes, Strings}
 
-@Mojo(name = "loc", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
-class LocMojo extends AbstractMojo {
+import java.io._
+import scala.collection.mutable
 
-  @Parameter(defaultValue = "${project}", readonly = true)
-  private var project: MavenProject = _
-
-  def execute(): Unit = {
-    val stats = new collection.mutable.HashMap[String, Int]
-
-    countDir(project.getBasedir, stats)
-
-    var sum = 0
-    val rs = stats.toList.sortBy(_._2).reverse
-    var maxLength = 0
-    rs foreach {
-      case (e, c) => {
-        if (e.length > maxLength) maxLength = e.length
-        sum += c
-      }
-    }
-
-    println(s"Project has $sum lines codes.")
-    rs foreach { t =>
-      println(Strings.leftPad(t._1, maxLength, ' ') + "  " + t._2)
-    }
+object SlocStat {
+  def countDir(path: File, excludes: Set[String]): Map[String, Int] = {
+    val stats = new mutable.HashMap[String, Int]
+    countDir(path, stats, excludes)
+    stats.toMap
   }
 
-  private def countDir(path: File, stats: collection.mutable.Map[String, Int]): Unit = {
+  def countDir(path: File, stats: mutable.Map[String, Int], excludes: Set[String]): Unit = {
     if (path.exists()) {
-      println(s"counting ${path.getAbsolutePath} ...")
-      count(path, stats)
+      count(path, stats, excludes)
     }
   }
 
-  private def count(dir: File, stats: collection.mutable.Map[String, Int]): Unit = {
+  private def count(dir: File, stats: collection.mutable.Map[String, Int], excludes: Set[String]): Unit = {
     if (!dir.exists()) return;
 
-    if (dir.getName == "target") return
+    if (dir.getName.startsWith(".") || excludes.contains(dir.getName)) {
+      return
+    }
     if (dir.isFile) {
       val fileExt = Strings.substringAfterLast(dir.getName, ".")
       if (Strings.isNotBlank(fileExt) && isText(fileExt)) {
@@ -82,7 +61,7 @@ class LocMojo extends AbstractMojo {
       }
     } else {
       dir.list() foreach { childName =>
-        count(new File(dir.getAbsolutePath + / + childName), stats)
+        count(new File(dir.getAbsolutePath + / + childName), stats, excludes)
       }
     }
   }
@@ -96,9 +75,5 @@ class LocMojo extends AbstractMojo {
       case Some(m) => (m.primaryType == "text" || fileExt == "xml" || fileExt == "js")
       case None => false
     }
-  }
-
-  override def getPluginContext: java.util.Map[_, _] = {
-    super.getPluginContext
   }
 }
