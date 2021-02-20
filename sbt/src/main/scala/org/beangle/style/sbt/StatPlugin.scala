@@ -1,6 +1,6 @@
 package org.beangle.style.sbt
 
-import org.beangle.style.core.SlocStat
+import org.beangle.style.stat.SlocStat
 import org.beangle.style.util.Strings
 import sbt.Keys.{baseDirectory, name, streams, target}
 import sbt.{Compile, Def, Test, inConfig, taskKey}

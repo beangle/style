@@ -9,12 +9,17 @@ import scala.collection.mutable
 object StylePlugin extends sbt.AutoPlugin {
 
   object autoImport {
-    val styleWscheck = taskKey[Unit]("Style check")
-    val styleWsformat = taskKey[Unit]("Style format")
+    val styleCheck = taskKey[Unit]("Style check")
+    val styleCheckAll = taskKey[Unit]("Style check all")
+    val styleFormat = taskKey[Unit]("Style format")
+    val styleFormatAll = taskKey[Unit]("Style format all")
 
     lazy val baseStyleSettings: Seq[Def.Setting[_]] = Seq(
-      styleWscheck := wsCheckTask.value,
-      styleWsformat := wsFormatTask.value
+      styleCheck := checkTask.value,
+      styleCheckAll := styleCheck.?.all(ScopeFilter(configurations = inAnyConfiguration)).value.flatten.toSet,
+      styleFormat := formatTask.value,
+      styleFormatAll := styleFormat.?.all(ScopeFilter(configurations = inAnyConfiguration)).value.flatten.toSet,
+      compile := compile.dependsOn(autoImport.styleCheckAll).value
     )
   }
 
@@ -27,32 +32,33 @@ object StylePlugin extends sbt.AutoPlugin {
     inConfig(Compile)(baseStyleSettings) ++
       inConfig(Test)(baseStyleSettings)
 
-  lazy val wsFormatTask =
+  lazy val formatTask =
     Def.task {
       val log = streams.value.log
-      sourceDirectories.value foreach { dir =>
+      unmanagedSourceDirectories.value.foreach { dir =>
         if (dir.exists()) {
-          log.info("White space formatting in " + dir.getPath)
+          log.info("Style formatting in " + dir.getPath)
           Style.format(dir, None)
         }
       }
     }
 
-  lazy val wsCheckTask =
+  lazy val checkTask =
     Def.task {
       val warns = new mutable.ArrayBuffer[String]
       val log = streams.value.log
-      sourceDirectories.value foreach { dir =>
+      unmanagedSourceDirectories.value foreach { dir =>
         if (dir.exists()) {
-          log.info("White space checking in " + dir.getPath)
+          log.info("Style checking in " + dir.getPath)
           Style.check(dir, warns)
         }
       }
       if (warns.nonEmpty) {
-        log.warn("Find several files violate whitespace rules.")
-        warns foreach { f =>
-          log.warn(f)
-        }
+        throw new MessageOnlyException(
+          s"""|Find ${warns.size} files violate style rules.!
+              |  ${warns.mkString(s"\n  ")}
+              |""".stripMargin
+        )
       }
-    }.triggeredBy(compile in Compile)
+    }
 }

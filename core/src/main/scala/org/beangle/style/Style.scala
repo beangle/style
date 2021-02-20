@@ -18,7 +18,7 @@
  */
 package org.beangle.style
 
-import org.beangle.style.core.{DefaultWhiteSpaceFormater, WhiteSpaceFormater}
+import org.beangle.style.ws.{DefaultWhiteSpaceFormater, WhiteSpaceFormater}
 
 import java.io.File
 
