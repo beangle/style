@@ -1,6 +1,4 @@
 /*
- * Beangle, Agile Development Scaffold and Toolkits.
- *
  * Copyright © 2005, The Beangle Software.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.beangle.style.util
 
 object Strings {
@@ -53,6 +52,15 @@ object Strings {
     val pos = str.indexOf(separator)
     if (pos == Index_not_found) return Empty
     str.substring(pos + separator.length)
+  }
+
+  def substringBefore(str: String, separator: String): String = {
+    if (isEmpty(str) || separator == null) return str
+    if (separator.length == 0) return Empty
+    val pos = str.indexOf(separator)
+    if (pos == Index_not_found) return str
+
+    str.substring(0, pos)
   }
 
   def substringBetween(str: String, open: String, close: String): String = {

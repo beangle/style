@@ -18,23 +18,29 @@
  */
 package org.beangle.style.maven
 
-import java.io.File
-
 import org.apache.maven.plugin.{AbstractMojo, MojoExecutionException}
 import org.apache.maven.plugins.annotations.{LifecyclePhase, Mojo, Parameter}
 import org.apache.maven.project.MavenProject
-import org.beangle.style.core.WhiteSpaceFormater
+import org.beangle.style.Style
+import org.beangle.style.license.LicenseOptions
 import org.beangle.style.util.Files./
 import org.beangle.style.util.Strings
 
+import java.io.File
 import scala.collection.mutable
 import scala.collection.mutable.ArrayBuffer
 
-@Mojo(name = "ws-check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
-class WSCheckMojo extends AbstractMojo {
+@Mojo(name = "check", defaultPhase = LifecyclePhase.VERIFY, threadSafe = true)
+class CheckMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", readonly = true)
   private var project: MavenProject = _
+
+  @Parameter
+  private var headerEmptyLine: Boolean = true
+
+  @Parameter
+  private var license: String = _
 
   def execute(): Unit = {
     import scala.collection.JavaConverters._
@@ -55,7 +61,7 @@ class WSCheckMojo extends AbstractMojo {
     val warns = new ArrayBuffer[String]
     locs foreach { loc =>
       getLog.info(s"checking $loc ...")
-      WhiteSpaceFormater.check(new File(loc), warns)
+      Style.check(new File(loc), LicenseOptions(buildLicense(), headerEmptyLine), warns)
     }
     if (warns.nonEmpty) {
       val files = warns.map(f => Strings.substringAfter(f, project.getBasedir.getAbsolutePath + /))
@@ -74,4 +80,15 @@ class WSCheckMojo extends AbstractMojo {
     }
   }
 
+  private def buildLicense(): String = {
+    var l = license
+    if (Strings.isEmpty(l)) {
+      if (project.getLicenses.size() > 0) {
+        l = project.getLicenses.get(0).getName
+      } else {
+        l = "License needed"
+      }
+    }
+    l
+  }
 }

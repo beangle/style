@@ -1,7 +1,7 @@
 import BuildSettings._
 import sbt._
 
-ThisBuild / version := "0.0.1"
+ThisBuild / version := "0.0.2"
 ThisBuild / description := "Beangle Style Checker."
 ThisBuild / organization := "org.beangle.style"
 ThisBuild / homepage := Some(url("https://github.com/beangle/style"))
@@ -13,10 +13,10 @@ ThisBuild / scmInfo := Some(
 )
 ThisBuild / developers := List(
   Developer(
-    id    = "duantihua",
-    name  = "Duan Tihua",
+    id = "duantihua",
+    name = "Duan Tihua",
     email = "duantihua@163.com",
-    url   = url("https://github.com/duantihua")
+    url = url("https://github.com/duantihua")
   )
 )
 
@@ -34,7 +34,7 @@ lazy val root = (project in file("."))
     name := "beangle-style",
     commonSettings
   )
-  .aggregate(core,sbtplugin)
+  .aggregate(core, sbtplugin)
 
 lazy val core = (project in file("core"))
   .settings(

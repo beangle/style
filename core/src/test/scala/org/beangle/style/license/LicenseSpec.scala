@@ -15,11 +15,21 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.beangle.style.util
+package org.beangle.style.license
 
-import java.nio.charset.Charset
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-object Charsets {
-  
-  val UTF_8 = Charset.forName("UTF-8")
+class LicenseSpec extends AnyWordSpec with Matchers {
+
+  "Licenses" should {
+    "loadTemplate" in {
+      val licenses = Licenses(this.getClass.getResourceAsStream("/org/beangle/style/license/sample.md"))
+      val license = licenses.get("LGPL-3.0")
+      license shouldBe (Some("LGPL-3.0-or-later\nCopyright (C) ${year}, ${owner}."))
+
+      val l = licenses.license("GNU Lesser General Public License version 3", "2005-2020", "Beangle")
+      l shouldBe ("LGPL-3.0-or-later\nCopyright (C) 2005-2020, Beangle.")
+    }
+  }
 }

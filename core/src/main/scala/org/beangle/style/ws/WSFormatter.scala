@@ -15,11 +15,14 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.beangle.style.util
+package org.beangle.style.ws
 
-import java.nio.charset.Charset
+import org.beangle.style.util._
 
-object Charsets {
-  
-  val UTF_8 = Charset.forName("UTF-8")
+import java.io.{File, FileInputStream, FileOutputStream}
+
+trait WSFormatter {
+
+  def format(str: String): String
+
 }

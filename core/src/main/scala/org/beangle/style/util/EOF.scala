@@ -17,9 +17,7 @@
 
 package org.beangle.style.util
 
-import java.nio.charset.Charset
-
-object Charsets {
-  
-  val UTF_8 = Charset.forName("UTF-8")
+object EOF {
+  val LF = "\n"
+  val CRLF = "\r\n"
 }
