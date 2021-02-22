@@ -4,7 +4,7 @@
   <artifactId>style-maven-plugin</artifactId>
   <packaging>maven-plugin</packaging>
   <name>Beangle Code Style Maven Plugin</name>
-  <version>0.0.2</version>
+  <version>0.0.2-SNAPSHOT</version>
   <inceptionYear>2005</inceptionYear>
   <description>
     Beangle provides agile development scaffold and toolkits.

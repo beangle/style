@@ -18,14 +18,11 @@
  */
 package org.beangle.style.maven
 
-import java.io.{BufferedReader, File, Reader, InputStreamReader, FileInputStream}
 import org.apache.maven.plugin.AbstractMojo
+import org.apache.maven.plugins.annotations.{LifecyclePhase, Mojo, Parameter, ResolutionScope}
 import org.apache.maven.project.MavenProject
-import org.apache.maven.plugins.annotations.{Mojo, Parameter, LifecyclePhase, ResolutionScope}
-import org.beangle.style.util.{Files, Strings}
-import org.beangle.style.util.MediaTypes
-import org.beangle.style.core.SlocStat
-import org.beangle.style.util.Files./
+import org.beangle.style.stat.SlocStat
+import org.beangle.style.util.Strings
 
 @Mojo(name = "sloc", defaultPhase = LifecyclePhase.PREPARE_PACKAGE, requiresDependencyCollection = ResolutionScope.COMPILE_PLUS_RUNTIME)
 class SlocMojo extends AbstractMojo {

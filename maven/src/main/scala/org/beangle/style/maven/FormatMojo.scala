@@ -18,59 +18,75 @@
  */
 package org.beangle.style.maven
 
-import java.io.File
 import org.apache.maven.plugin.AbstractMojo
-import org.apache.maven.plugins.annotations.{ Mojo, Parameter }
+import org.apache.maven.plugins.annotations.{Mojo, Parameter}
 import org.apache.maven.project.MavenProject
+import org.beangle.style.Style
+import org.beangle.style.license.LicenseOptions
 import org.beangle.style.util.Files./
-import org.beangle.style.core.{ DefaultWhiteSpaceFormater, WhiteSpaceFormater }
+import org.beangle.style.util.Strings
+import org.beangle.style.ws.WsOptions
 
-@Mojo(name = "ws-format")
-class FormatSpaceMojo extends AbstractMojo {
+import java.io.File
+
+@Mojo(name = "format")
+class FormatMojo extends AbstractMojo {
 
   @Parameter(defaultValue = "${project}", readonly = true)
   private var project: MavenProject = _
 
-  def execute(): Unit = {
-    val builder = DefaultWhiteSpaceFormater.newBuilder()
-    var tabLength = System.getProperty("tablength")
-    if (null == tabLength) tabLength = "2"
-    builder.enableTab2space(Integer.parseInt(tabLength)).enableTrimTrailingWhiteSpace().insertFinalNewline()
-    val formater = builder.build()
+  @Parameter
+  private var headerEmptyLine: Boolean = true
 
+  @Parameter
+  private var license: String = _
+
+  def execute(): Unit = {
     val dir = System.getProperty("dir")
     val ext = Option(System.getProperty("ext"))
 
     if (null == dir) {
       import scala.collection.JavaConverters._
       project.getCompileSourceRoots.asScala foreach { resource =>
-        format(resource, formater, ext)
+        format(resource, ext)
       }
 
       project.getTestCompileSourceRoots.asScala foreach { resource =>
-        format(resource, formater, ext)
+        format(resource, ext)
       }
 
       project.getResources.asScala foreach { resource =>
-        format(resource.getDirectory, formater, ext)
+        format(resource.getDirectory, ext)
       }
 
       project.getTestResources.asScala foreach { resource =>
-        format(resource.getDirectory, formater, ext)
+        format(resource.getDirectory, ext)
       }
     } else {
       if (new File(dir).exists()) {
-        format(dir, formater, ext)
+        format(dir, ext)
       } else {
-        format(project.getBasedir.getAbsolutePath + / + dir, formater, ext)
+        format(project.getBasedir.getAbsolutePath + / + dir, ext)
       }
     }
   }
 
-  private def format(path: String, formater: WhiteSpaceFormater, ext: Option[String]): Unit = {
+  private def format(path: String, ext: Option[String]): Unit = {
     if (new File(path).exists()) {
       println(s"formating $path ...")
-      WhiteSpaceFormater.format(formater, new File(path), ext)
+      Style.format(new File(path), ext, WsOptions.Default, LicenseOptions(buildLicense(), headerEmptyLine))
     }
+  }
+
+  private def buildLicense(): String = {
+    var l = license
+    if (Strings.isEmpty(l)) {
+      if (project.getLicenses.size() > 0) {
+        l = project.getLicenses.get(0).getName
+      } else {
+        l = "License needed"
+      }
+    }
+    l
   }
 }

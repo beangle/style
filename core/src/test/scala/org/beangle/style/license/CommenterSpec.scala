@@ -15,11 +15,23 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.beangle.style.util
+package org.beangle.style.license
 
-import java.nio.charset.Charset
+import org.scalatest.matchers.should.Matchers
+import org.scalatest.wordspec.AnyWordSpec
 
-object Charsets {
-  
-  val UTF_8 = Charset.forName("UTF-8")
+class CommenterSpec extends AnyWordSpec with Matchers {
+
+  val license ="This is a test license"
+
+  "CStyle" should {
+    "C style comment blocks" in {
+      val expected =
+        s"""|/*
+            | * $license
+            | */
+            |""".stripMargin
+      CommentStyle.C(license) shouldBe expected
+    }
+  }
 }

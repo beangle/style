@@ -15,11 +15,10 @@
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-package org.beangle.style.util
+package org.beangle.style.ws
 
-import java.nio.charset.Charset
-
-object Charsets {
-  
-  val UTF_8 = Charset.forName("UTF-8")
+object WsOptions {
+  val Default = WsOptions(true, 2, true, true, true)
 }
+
+case class WsOptions(tab2space: Boolean, tablength: Int, fixcrlf: Boolean, insertFinalNewline: Boolean, trimTrailing: Boolean)

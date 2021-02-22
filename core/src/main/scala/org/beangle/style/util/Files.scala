@@ -1,6 +1,4 @@
 /*
- * Beangle, Agile Development Scaffold and Toolkits.
- *
  * Copyright © 2005, The Beangle Software.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,6 +14,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.beangle.style.util
 
 import java.nio.charset.Charset
@@ -33,6 +32,10 @@ object Files {
   private val eof = -1
 
   val / = File.separator
+
+  def extension(file: File): String = {
+    Strings.substringAfterLast(file.getName, ".")
+  }
 
   def readString(input: InputStream, charset: Charset = Charsets.UTF_8): String = {
     try {
@@ -77,7 +80,7 @@ object Files {
     if (reader.isInstanceOf[BufferedReader]) reader.asInstanceOf[BufferedReader] else new BufferedReader(reader)
   }
 
-  def write(data: String, output: OutputStream, charset: Charset = null) : Unit ={
+  def write(data: String, output: OutputStream, charset: Charset = null): Unit = {
     if (data != null) {
       if (charset == null)
         output.write(data.getBytes())

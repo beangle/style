@@ -1,6 +1,4 @@
 /*
- * Beangle, Agile Development Scaffold and Toolkits.
- *
  * Copyright © 2005, The Beangle Software.
  *
  * This program is free software: you can redistribute it and/or modify
@@ -16,11 +14,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
+
 package org.beangle.style.ws
 
 import org.beangle.style.util.Strings
+import org.beangle.style.util.EOF
 
-object DefaultWhiteSpaceFormater {
+object DefaultWSFormatter {
 
   trait LineProcessor {
     def process(line: String): String
@@ -84,22 +84,22 @@ object DefaultWhiteSpaceFormater {
       this
     }
 
-    def build(): WhiteSpaceFormater = {
+    def build(): WSFormatter = {
       val processors = new collection.mutable.ArrayBuffer[LineProcessor]
       if (tab2space) processors += new Tab2Space(tablength)
       if (trimTrailingWhiteSpace) processors += TrimTrailingWhiteSpace
-      new DefaultWhiteSpaceFormater(eof, processors.toList, fixLast)
+      new DefaultWSFormatter(eof, processors.toList, fixLast)
     }
   }
 
 }
 
-import org.beangle.style.ws.DefaultWhiteSpaceFormater._
+import org.beangle.style.ws.DefaultWSFormatter._
 import org.beangle.style.util.Strings
 
-class DefaultWhiteSpaceFormater(val eof: String = EOF.LF, lineProcessors: List[LineProcessor],
-                                val fixLast: Boolean)
-  extends WhiteSpaceFormater {
+class DefaultWSFormatter(val eof: String = EOF.LF, lineProcessors: List[LineProcessor],
+                         val fixLast: Boolean)
+  extends WSFormatter {
 
   def format(str: String): String = {
     var fixlf = Strings.replace(str, "\r", "")
@@ -122,7 +122,6 @@ class DefaultWhiteSpaceFormater(val eof: String = EOF.LF, lineProcessors: List[L
   }
 
   private def join(seq: Array[String], eof: String, fixLast: Boolean): String = {
-    val seqLen = seq.length
     val aim = new StringBuilder()
     (0 until seq.length) foreach { i =>
       if (i > 0) aim.append(eof)
