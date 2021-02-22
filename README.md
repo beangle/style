@@ -12,11 +12,11 @@
     <plugin>
       <groupId>org.beangle</groupId>
       <artifactId>style-maven-plugin</artifactId>
-      <version>0.0.1</version>
+      <version>0.0.2</version>
       <executions>
         <execution>
           <goals>
-            <goal>ws-check</goal>
+            <goal>check</goal>
           </goals>
         </execution>
       </executions>
@@ -25,5 +25,9 @@
 ## 2. sbt
   使用sbt构建时，在project/plugins.sbt中添加
 
-    addSbtPlugin("org.beangle.style" % "sbt-beangle-style" % "0.0.1")
+    addSbtPlugin("org.beangle.style" % "sbt-beangle-style" % "0.0.2")
+
+  在编译过程中，会检查上属规则，格式化代码，可以使用
+
+    styleFormatAll
 
