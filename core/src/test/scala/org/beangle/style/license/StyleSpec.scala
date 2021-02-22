@@ -27,12 +27,12 @@ import java.io.File
 class StyleSpec extends AnyWordSpec with Matchers {
 
   "Licenses" should {
-    "loadTemplate" in {
+    "format style" in {
       val licenses = Licenses(this.getClass.getResourceAsStream("/org/beangle/style/license/sample.md"))
-      val license = licenses.get("LGPL-3.0-or-later")
+      val license = licenses.get("LGPL-3.0")
       license shouldBe (Some("LGPL-3.0-or-later\nCopyright (C) ${year}, ${owner}."))
 
-      val l = licenses.license("LGPL-3.0-or-later", "2005-2020", "Beangle")
+      val l = licenses.license("LGPL-3.0", "2005-2020", "Beangle")
       val lo = LicenseOptions(l, false)
       val wo = WsOptions(true, 2, true, true, true)
       Style.format(new File("E:\\workspace\\beangle\\style\\core\\src\\test\\resources\\org\\beangle\\style\\license\\Sample.scala"), None, wo, lo)

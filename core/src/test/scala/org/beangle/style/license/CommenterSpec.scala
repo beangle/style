@@ -25,7 +25,7 @@ class CommenterSpec extends AnyWordSpec with Matchers {
   val license ="This is a test license"
 
   "CStyle" should {
-    "C style comment blocks" in {
+    "generate C style blocks" in {
       val expected =
         s"""|/*
             | * $license

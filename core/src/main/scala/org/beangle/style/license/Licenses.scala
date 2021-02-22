@@ -32,9 +32,16 @@ object Licenses {
       finally input.close()
     val licenses = Strings.split(content, '#')
     licenses foreach { license =>
-      val name = license.substring(0, license.indexOf('\n'))
+      var name = license.substring(0, license.indexOf('\n'))
       val body = license.substring(name.length).trim
-      templates.put(name.trim, body)
+      if (name.contains("(")) {
+        val shortName = Strings.substringBetween(name, "(", ")")
+        name = Strings.substringBefore(name, "(")
+        templates.put(name.trim, body)
+        templates.put(shortName.trim, body)
+      } else {
+        templates.put(name.trim, body)
+      }
     }
     new Licenses(templates.toMap)
   }

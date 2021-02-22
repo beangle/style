@@ -54,6 +54,15 @@ object Strings {
     str.substring(pos + separator.length)
   }
 
+  def substringBefore(str: String, separator: String): String = {
+    if (isEmpty(str) || separator == null) return str
+    if (separator.length == 0) return Empty
+    val pos = str.indexOf(separator)
+    if (pos == Index_not_found) return str
+
+    str.substring(0, pos)
+  }
+
   def substringBetween(str: String, open: String, close: String): String = {
     if (str == null || open == null || close == null) return null
     val start = str.indexOf(open)

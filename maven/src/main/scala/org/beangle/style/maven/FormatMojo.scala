@@ -22,7 +22,7 @@ import org.apache.maven.plugin.AbstractMojo
 import org.apache.maven.plugins.annotations.{Mojo, Parameter}
 import org.apache.maven.project.MavenProject
 import org.beangle.style.Style
-import org.beangle.style.license.LicenseOptions
+import org.beangle.style.license.{LicenseOptions, Licenses}
 import org.beangle.style.util.Files./
 import org.beangle.style.util.Strings
 import org.beangle.style.ws.WsOptions
@@ -87,6 +87,7 @@ class FormatMojo extends AbstractMojo {
         l = "License needed"
       }
     }
-    l
+    val repos = Licenses(this.getClass.getResourceAsStream("/org/beangle/style/license/detailed.md"))
+    repos.license(l, project.getInceptionYear, project.getOrganization.getName)
   }
 }
