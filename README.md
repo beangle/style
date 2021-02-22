@@ -27,7 +27,7 @@
 
     addSbtPlugin("org.beangle.style" % "sbt-beangle-style" % "0.0.2")
 
-  在编译过程中，会检查上属规则，格式化代码，可以使用
+  在编译过程中，会检查上属规则。手工格式化代码，可以使用
 
     styleFormatAll
 
