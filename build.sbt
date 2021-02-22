@@ -1,7 +1,7 @@
 import BuildSettings._
 import sbt._
 
-ThisBuild / version := "0.0.2-SNAPSHOT"
+ThisBuild / version := "0.0.2"
 ThisBuild / description := "Beangle Style Checker."
 ThisBuild / organization := "org.beangle.style"
 ThisBuild / homepage := Some(url("https://github.com/beangle/style"))
